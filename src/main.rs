@@ -41,7 +41,7 @@ struct Grid {
 impl Grid {
     pub fn new(width: isize, height: isize) -> Grid {
         let mut rng = rand::thread_rng();
-        let mut cells = (0..(width * height)).map(|_| rng.gen()).collect::<Vec<bool>>();
+        let cells = (0..(width * height)).map(|_| rng.gen()).collect::<Vec<bool>>();
 
         Grid {
             cells: cells,
@@ -97,9 +97,9 @@ impl Display for Grid {
         for y in 0..self.height {
             for x in 0..self.width {
                 if self.cell_at(x, y) {
-                    write!(f, "*");
+                    write!(f, "*").unwrap();
                 } else {
-                    write!(f, " ");
+                    write!(f, " ").unwrap();
                 }
             }
 

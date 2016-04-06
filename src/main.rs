@@ -1,18 +1,18 @@
 extern crate rand;
-extern crate terminal_size;
+extern crate termsize;
 
 use rand::Rng;
 use std::fmt;
 use std::fmt::Display;
 use std::thread::sleep;
 use std::time::Duration;
-use terminal_size::{Width, Height, terminal_size};
+use termsize::Size;
 
 fn main() {
-    let size = terminal_size();
+    let size = termsize::get();
 
-    let (width, height) = if let Some((Width(w), Height(h))) = size {
-        (w as isize, h as isize)
+    let (width, height) = if let Some(Size{rows, cols}) = size {
+        (cols as isize, rows as isize)
     } else {
         (20, 20)
     };

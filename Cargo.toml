@@ -5,3 +5,4 @@ authors = ["Leo Cassarani <me@leocassarani.net>", "Kevin Butler <haqkrs@gmail.co
 
 [dependencies]
 rand = "*"
+terminal_size = "*"

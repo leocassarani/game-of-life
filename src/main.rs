@@ -1,16 +1,27 @@
 extern crate rand;
+extern crate terminal_size;
 
 use rand::Rng;
 use std::fmt;
 use std::fmt::Display;
 use std::thread::sleep;
 use std::time::Duration;
+use terminal_size::{Width, Height, terminal_size};
 
 fn main() {
-    let mut g = Grid::new();
+    let size = terminal_size();
+
+    let (width, height) = if let Some((Width(w), Height(h))) = size {
+        (w as isize, h as isize)
+    } else {
+        (20, 20)
+    };
+
+    let mut g = Grid::new(width, height);
+
     loop {
         clear();
-        println!("{}", g);
+        print!("{}", g);
         g = g.tick();
         sleep(Duration::from_millis(100));
     }
@@ -22,16 +33,13 @@ fn clear() {
 
 #[derive(Clone)]
 struct Grid {
-    width : isize,
-    height : isize,
-    cells : Vec<bool>
+    width: isize,
+    height: isize,
+    cells: Vec<bool>
 }
 
 impl Grid {
-    pub fn new() -> Grid {
-        let width = 160;
-        let height = 40;
-
+    pub fn new(width: isize, height: isize) -> Grid {
         let mut rng = rand::thread_rng();
         let mut cells = (0..(width * height)).map(|_| rng.gen()).collect::<Vec<bool>>();
 
@@ -63,14 +71,14 @@ impl Grid {
         }
     }
 
-    fn cell_at(&self, x : isize, y : isize) -> bool {
+    fn cell_at(&self, x: isize, y: isize) -> bool {
         if x < 0 || y < 0 || x >= self.width || y >= self.height {
             return false
         }
         self.cells[(y * self.width + x) as usize]
     }
 
-    fn neighbour_count(&self, x : isize, y : isize) -> usize {
+    fn neighbour_count(&self, x: isize, y: isize) -> usize {
         [
             self.cell_at(x-1, y-1),
             self.cell_at(x-1, y),
@@ -94,7 +102,10 @@ impl Display for Grid {
                     write!(f, " ");
                 }
             }
-            write!(f, "\n").unwrap()
+
+            if y < self.height - 1 {
+                write!(f, "\n").unwrap()
+            }
         }
         Ok(())
     }

@@ -21,7 +21,7 @@ fn main() {
 
     loop {
         clear();
-        print!("{}", g);
+        print!("\r{}", g);
         g = g.tick();
         sleep(Duration::from_millis(100));
     }
